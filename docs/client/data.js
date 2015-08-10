@@ -467,6 +467,333 @@ DocsData = {
     "scope": "static",
     "summary": "Marks the user's email address as verified. Logs the user in afterwards."
   },
+  "AccountsClient": {
+    "augments": [
+      "AccountsCommon"
+    ],
+    "filepath": "accounts-base/accounts_client.js",
+    "instancename": "Accounts",
+    "kind": "class",
+    "lineno": 11,
+    "locus": "Client",
+    "longname": "AccountsClient",
+    "name": "AccountsClient",
+    "options": [
+      {
+        "description": "<p>Optional DDP connection to reuse.</p>",
+        "name": "connection",
+        "type": {
+          "names": [
+            "Object"
+          ]
+        }
+      },
+      {
+        "description": "<p>Optional URL for creating a new DDP connection.</p>",
+        "name": "ddpUrl",
+        "type": {
+          "names": [
+            "String"
+          ]
+        }
+      }
+    ],
+    "params": [
+      {
+        "description": "<p>an object with fields:</p>",
+        "name": "options",
+        "type": {
+          "names": [
+            "Object"
+          ]
+        }
+      }
+    ],
+    "scope": "global",
+    "summary": "Constructor for the `Accounts` namespace on the client."
+  },
+  "AccountsClient#config": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#config",
+    "kind": "function",
+    "lineno": 92,
+    "locus": "Anywhere",
+    "longname": "AccountsClient#config",
+    "memberof": "AccountsClient",
+    "name": "config",
+    "options": [
+      {
+        "description": "<p>New users with an email address will receive an address verification email.</p>",
+        "name": "sendVerificationEmail",
+        "type": {
+          "names": [
+            "Boolean"
+          ]
+        }
+      },
+      {
+        "description": "<p>Calls to <a href=\"#accounts_createuser\"><code>createUser</code></a> from the client will be rejected. In addition, if you are using <a href=\"#accountsui\">accounts-ui</a>, the &quot;Create account&quot; link will not be available.</p>",
+        "name": "forbidClientAccountCreation",
+        "type": {
+          "names": [
+            "Boolean"
+          ]
+        }
+      },
+      {
+        "description": "<p>If set to a string, only allows new users if the domain part of their email address matches the string. If set to a function, only allows new users if the function returns true.  The function is passed the full email address of the proposed new user.  Works with password-based sign-in and external services that expose email addresses (Google, Facebook, GitHub). All existing users still can log in after enabling this option. Example: <code>Accounts.config({ restrictCreationByEmailDomain: 'school.edu' })</code>.</p>",
+        "name": "restrictCreationByEmailDomain",
+        "type": {
+          "names": [
+            "String",
+            "function"
+          ]
+        }
+      },
+      {
+        "description": "<p>The number of days from when a user logs in until their token expires and they are logged out. Defaults to 90. Set to <code>null</code> to disable login expiration.</p>",
+        "name": "loginExpirationInDays",
+        "type": {
+          "names": [
+            "Number"
+          ]
+        }
+      },
+      {
+        "description": "<p>When using the <code>oauth-encryption</code> package, the 16 byte key using to encrypt sensitive account credentials in the database, encoded in base64.  This option may only be specifed on the server.  See packages/oauth-encryption/README.md for details.</p>",
+        "name": "oauthSecretKey",
+        "type": {
+          "names": [
+            "String"
+          ]
+        }
+      }
+    ],
+    "params": [
+      {
+        "name": "options",
+        "type": {
+          "names": [
+            "Object"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Set global accounts options."
+  },
+  "AccountsClient#loggingIn": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 54,
+    "locus": "Client",
+    "longname": "AccountsClient#loggingIn",
+    "memberof": "AccountsClient",
+    "name": "loggingIn",
+    "options": [],
+    "params": [],
+    "scope": "instance",
+    "summary": "True if a login method (such as `Meteor.loginWithPassword`, `Meteor.loginWithFacebook`, or `Accounts.createUser`) is currently in progress. A reactive data source."
+  },
+  "AccountsClient#logout": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 123,
+    "locus": "Client",
+    "longname": "AccountsClient#logout",
+    "memberof": "AccountsClient",
+    "name": "logout",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>Optional callback. Called with no arguments on success, or with a single <code>Error</code> argument on failure.</p>",
+        "name": "callback",
+        "optional": true,
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Log the user out."
+  },
+  "AccountsClient#logoutOtherClients": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 142,
+    "locus": "Client",
+    "longname": "AccountsClient#logoutOtherClients",
+    "memberof": "AccountsClient",
+    "name": "logoutOtherClients",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>Optional callback. Called with no arguments on success, or with a single <code>Error</code> argument on failure.</p>",
+        "name": "callback",
+        "optional": true,
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Log out other clients logged in as the current user, but does not log out the client that calls this function."
+  },
+  "AccountsClient#onEmailVerificationLink": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 94,
+    "locus": "Client",
+    "longname": "AccountsClient#onEmailVerificationLink",
+    "memberof": "AccountsClient",
+    "name": "onEmailVerificationLink",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: An email verification token that can be passed to\n<a href=\"#accounts_verifyemail\"><code>Accounts.verifyEmail</code></a>.</li>\n<li><code>done</code>: A function to call when the email verification UI flow is complete.\nThe normal login process is suspended until this function is called, so\nthat the user can be notified that they are verifying their email before\nbeing logged in.</li>\n</ol>",
+        "name": "callback",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a function to call when an email verification link is\nclicked in an email sent by\n[`Accounts.sendVerificationEmail`](#accounts_sendverificationemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
+  },
+  "AccountsClient#onEnrollmentLink": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 114,
+    "locus": "Client",
+    "longname": "AccountsClient#onEnrollmentLink",
+    "memberof": "AccountsClient",
+    "name": "onEnrollmentLink",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: A password reset token that can be passed to\n<a href=\"#accounts_resetpassword\"><code>Accounts.resetPassword</code></a> to give the newly\nenrolled account a password.</li>\n<li><code>done</code>: A function to call when the enrollment UI flow is complete.\nThe normal login process is suspended until this function is called, so that\nuser A can be enrolled even if user B was logged in.</li>\n</ol>",
+        "name": "callback",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a function to call when an account enrollment link is\nclicked in an email sent by\n[`Accounts.sendEnrollmentEmail`](#accounts_sendenrollmentemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
+  },
+  "AccountsClient#onLogin": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#onLogin",
+    "kind": "function",
+    "lineno": 146,
+    "locus": "Anywhere",
+    "longname": "AccountsClient#onLogin",
+    "memberof": "AccountsClient",
+    "name": "onLogin",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The callback to be called when login is successful.</p>",
+        "name": "func",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a callback to be called after a login attempt succeeds."
+  },
+  "AccountsClient#onLoginFailure": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#onLoginFailure",
+    "kind": "function",
+    "lineno": 155,
+    "locus": "Anywhere",
+    "longname": "AccountsClient#onLoginFailure",
+    "memberof": "AccountsClient",
+    "name": "onLoginFailure",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The callback to be called after the login has failed.</p>",
+        "name": "func",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a callback to be called after a login attempt fails."
+  },
+  "AccountsClient#onResetPasswordLink": {
+    "filepath": "accounts-base/accounts_client.js",
+    "kind": "function",
+    "lineno": 74,
+    "locus": "Client",
+    "longname": "AccountsClient#onResetPasswordLink",
+    "memberof": "AccountsClient",
+    "name": "onResetPasswordLink",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: A password reset token that can be passed to\n<a href=\"#accounts_resetpassword\"><code>Accounts.resetPassword</code></a>.</li>\n<li><code>done</code>: A function to call when the password reset UI flow is complete. The normal\nlogin process is suspended until this function is called, so that the\npassword for user A can be reset even if user B was logged in.</li>\n</ol>",
+        "name": "callback",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a function to call when a reset password link is clicked\nin an email sent by\n[`Accounts.sendResetPasswordEmail`](#accounts_sendresetpasswordemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
+  },
+  "AccountsClient#user": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#user",
+    "kind": "function",
+    "lineno": 52,
+    "locus": "Anywhere but publish functions",
+    "longname": "AccountsClient#user",
+    "memberof": "AccountsClient",
+    "name": "user",
+    "options": [],
+    "params": [],
+    "scope": "instance",
+    "summary": "Get the current user record, or `null` if no user is logged in. A reactive data source."
+  },
+  "AccountsClient#userId": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#userId",
+    "kind": "function",
+    "lineno": 44,
+    "locus": "Anywhere but publish functions",
+    "longname": "AccountsClient#userId",
+    "memberof": "AccountsClient",
+    "name": "userId",
+    "options": [],
+    "overrides": "AccountsCommon#userId",
+    "params": [],
+    "scope": "instance",
+    "summary": "Get the current user id, or `null` if no user is logged in. A reactive data source."
+  },
   "AccountsCommon": {
     "filepath": "accounts-base/accounts_common.js",
     "instancename": "Accounts",
@@ -653,75 +980,6 @@ DocsData = {
     ],
     "scope": "static",
     "summary": "Customize new user creation."
-  },
-  "Ap.onEmailVerificationLink": {
-    "filepath": "accounts-base/url_client.js",
-    "kind": "function",
-    "lineno": 129,
-    "locus": "Client",
-    "longname": "Ap.onEmailVerificationLink",
-    "memberof": "Ap",
-    "name": "onEmailVerificationLink",
-    "options": [],
-    "params": [
-      {
-        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: An email verification token that can be passed to\n<a href=\"#accounts_verifyemail\"><code>Accounts.verifyEmail</code></a>.</li>\n<li><code>done</code>: A function to call when the email verification UI flow is complete.\nThe normal login process is suspended until this function is called, so\nthat the user can be notified that they are verifying their email before\nbeing logged in.</li>\n</ol>",
-        "name": "callback",
-        "type": {
-          "names": [
-            "function"
-          ]
-        }
-      }
-    ],
-    "scope": "static",
-    "summary": "Register a function to call when an email verification link is\nclicked in an email sent by\n[`Accounts.sendVerificationEmail`](#accounts_sendverificationemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
-  },
-  "Ap.onEnrollmentLink": {
-    "filepath": "accounts-base/url_client.js",
-    "kind": "function",
-    "lineno": 154,
-    "locus": "Client",
-    "longname": "Ap.onEnrollmentLink",
-    "memberof": "Ap",
-    "name": "onEnrollmentLink",
-    "options": [],
-    "params": [
-      {
-        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: A password reset token that can be passed to\n<a href=\"#accounts_resetpassword\"><code>Accounts.resetPassword</code></a> to give the newly\nenrolled account a password.</li>\n<li><code>done</code>: A function to call when the enrollment UI flow is complete.\nThe normal login process is suspended until this function is called, so that\nuser A can be enrolled even if user B was logged in.</li>\n</ol>",
-        "name": "callback",
-        "type": {
-          "names": [
-            "function"
-          ]
-        }
-      }
-    ],
-    "scope": "static",
-    "summary": "Register a function to call when an account enrollment link is\nclicked in an email sent by\n[`Accounts.sendEnrollmentEmail`](#accounts_sendenrollmentemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
-  },
-  "Ap.onResetPasswordLink": {
-    "filepath": "accounts-base/url_client.js",
-    "kind": "function",
-    "lineno": 104,
-    "locus": "Client",
-    "longname": "Ap.onResetPasswordLink",
-    "memberof": "Ap",
-    "name": "onResetPasswordLink",
-    "options": [],
-    "params": [
-      {
-        "description": "<p>The function to call. It is given two arguments:</p>\n<ol>\n<li><code>token</code>: A password reset token that can be passed to\n<a href=\"#accounts_resetpassword\"><code>Accounts.resetPassword</code></a>.</li>\n<li><code>done</code>: A function to call when the password reset UI flow is complete. The normal\nlogin process is suspended until this function is called, so that the\npassword for user A can be reset even if user B was logged in.</li>\n</ol>",
-        "name": "callback",
-        "type": {
-          "names": [
-            "function"
-          ]
-        }
-      }
-    ],
-    "scope": "static",
-    "summary": "Register a function to call when a reset password link is clicked\nin an email sent by\n[`Accounts.sendResetPasswordEmail`](#accounts_sendresetpasswordemail).\nThis function should be called in top-level code, not inside\n`Meteor.startup()`."
   },
   "Ap.validateLoginAttempt": {
     "filepath": "accounts-base/accounts_server.js",
@@ -4149,7 +4407,7 @@ DocsData = {
   "Meteor.loggingIn": {
     "filepath": "accounts-base/accounts_client.js",
     "kind": "function",
-    "lineno": 53,
+    "lineno": 193,
     "locus": "Client",
     "longname": "Meteor.loggingIn",
     "memberof": "Meteor",
@@ -4157,7 +4415,7 @@ DocsData = {
     "options": [],
     "params": [],
     "scope": "static",
-    "summary": "True if a login method (such as `Meteor.loginWithPassword`, `Meteor.loginWithFacebook`, or `Accounts.createUser`) is currently in progress. A reactive data source."
+    "summary": "Same as [`Accounts.loggingIn`](#accounts_loggingin)."
   },
   "Meteor.loginWith<ExternalService>": {
     "filepath": "accounts-oauth/oauth_client.js",
@@ -4293,7 +4551,7 @@ DocsData = {
   "Meteor.logout": {
     "filepath": "accounts-base/accounts_client.js",
     "kind": "function",
-    "lineno": 256,
+    "lineno": 391,
     "locus": "Client",
     "longname": "Meteor.logout",
     "memberof": "Meteor",
@@ -4312,12 +4570,12 @@ DocsData = {
       }
     ],
     "scope": "static",
-    "summary": "Log the user out."
+    "summary": "Same as [`AccountsClient#logout`](#accounts-logout)."
   },
   "Meteor.logoutOtherClients": {
     "filepath": "accounts-base/accounts_client.js",
     "kind": "function",
-    "lineno": 279,
+    "lineno": 400,
     "locus": "Client",
     "longname": "Meteor.logoutOtherClients",
     "memberof": "Meteor",
@@ -4336,7 +4594,7 @@ DocsData = {
       }
     ],
     "scope": "static",
-    "summary": "Log out other clients logged in as the current user, but does not log out the client that calls this function."
+    "summary": "Same as [`AccountsClient#logoutOtherClients`](#accounts_logoutotherclients)."
   },
   "Meteor.methods": {
     "filepath": "ddp-server/livedata_server.js",
@@ -7235,7 +7493,7 @@ DocsData = {
     "filepath": "accounts-base/accounts_client.js",
     "ishelper": "true",
     "kind": "member",
-    "lineno": 390,
+    "lineno": 467,
     "longname": "currentUser",
     "name": "currentUser",
     "scope": "global",
@@ -7263,7 +7521,7 @@ DocsData = {
     "filepath": "accounts-base/accounts_client.js",
     "ishelper": "true",
     "kind": "member",
-    "lineno": 400,
+    "lineno": 477,
     "longname": "loggingIn",
     "name": "loggingIn",
     "scope": "global",

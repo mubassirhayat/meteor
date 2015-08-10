@@ -1,62 +1,197 @@
-// @summary Constructor for AccountsClient instances. Available only on
-//          the client for now, though server code might also want to
-//          create a client connection to an accounts server.
-// @locus Client
-// @param options {Object} an object with fields:
-// - connection {Object} Optional DDP connection to reuse.
-// - ddpUrl {String} Optional URL for creating a new DDP connection.
-AccountsClient = function _AccountsClient(options) {
-  AccountsCommon.call(this, options);
+/**
+ * @summary Constructor for the `Accounts` namespace on the client.
+ * @locus Client
+ * @class
+ * @extends AccountsCommon
+ * @instancename Accounts
+ * @param {Object} options an object with fields:
+ * @param {Object} options.connection Optional DDP connection to reuse.
+ * @param {String} options.ddpUrl Optional URL for creating a new DDP connection.
+ */
+AccountsClient = class AccountsClient extends AccountsCommon {
+  constructor(options) {
+    super(options);
 
-  this._loggingIn = false;
-  this._loggingInDeps = new Tracker.Dependency;
+    this._loggingIn = false;
+    this._loggingInDeps = new Tracker.Dependency;
 
-  this._loginServicesHandle =
-    this.connection.subscribe("meteor.loginServiceConfiguration");
+    this._loginServicesHandle =
+      this.connection.subscribe("meteor.loginServiceConfiguration");
 
-  this._pageLoadLoginCallbacks = [];
-  this._pageLoadLoginAttemptInfo = null;
+    this._pageLoadLoginCallbacks = [];
+    this._pageLoadLoginAttemptInfo = null;
 
-  // Defined in url_client.js.
-  this._initUrlMatching();
+    // Defined in url_client.js.
+    this._initUrlMatching();
 
-  // Defined in localstorage_token.js.
-  this._initLocalStorage();
-};
+    // Defined in localstorage_token.js.
+    this._initLocalStorage();
+  }
 
-Meteor._inherits(AccountsClient, AccountsCommon);
-var Ap = AccountsClient.prototype;
+  ///
+  /// CURRENT USER
+  ///
 
-///
-/// CURRENT USER
-///
+  // @override
+  userId() {
+    return this.connection.userId();
+  }
 
-// @override
-Ap.userId = function () {
-  return this.connection.userId();
-};
+  // This is mostly just called within this file, but Meteor.loginWithPassword
+  // also uses it to make loggingIn() be true during the beginPasswordExchange
+  // method call too.
+  _setLoggingIn(x) {
+    if (this._loggingIn !== x) {
+      this._loggingIn = x;
+      this._loggingInDeps.changed();
+    }
+  }
 
-// This is mostly just called within this file, but Meteor.loginWithPassword
-// also uses it to make loggingIn() be true during the beginPasswordExchange
-// method call too.
-Ap._setLoggingIn = function (x) {
-  if (this._loggingIn !== x) {
-    this._loggingIn = x;
-    this._loggingInDeps.changed();
+  /**
+   * @summary True if a login method (such as `Meteor.loginWithPassword`, `Meteor.loginWithFacebook`, or `Accounts.createUser`) is currently in progress. A reactive data source.
+   * @locus Client
+   */
+  loggingIn() {
+    this._loggingInDeps.depend();
+    return this._loggingIn;
+  }
+
+  /**
+   * @summary Register a function to call when a reset password link is clicked
+   * in an email sent by
+   * [`Accounts.sendResetPasswordEmail`](#accounts_sendresetpasswordemail).
+   * This function should be called in top-level code, not inside
+   * `Meteor.startup()`.
+   * @param  {Function} callback The function to call. It is given two arguments:
+   *
+   * 1. `token`: A password reset token that can be passed to
+   * [`Accounts.resetPassword`](#accounts_resetpassword).
+   * 2. `done`: A function to call when the password reset UI flow is complete. The normal
+   * login process is suspended until this function is called, so that the
+   * password for user A can be reset even if user B was logged in.
+   * @locus Client
+   */
+  onResetPasswordLink(callback) {
+    throw new Error("implemented in url_client.js");
+  }
+
+  /**
+   * @summary Register a function to call when an email verification link is
+   * clicked in an email sent by
+   * [`Accounts.sendVerificationEmail`](#accounts_sendverificationemail).
+   * This function should be called in top-level code, not inside
+   * `Meteor.startup()`.
+   * @param  {Function} callback The function to call. It is given two arguments:
+   *
+   * 1. `token`: An email verification token that can be passed to
+   * [`Accounts.verifyEmail`](#accounts_verifyemail).
+   * 2. `done`: A function to call when the email verification UI flow is complete.
+   * The normal login process is suspended until this function is called, so
+   * that the user can be notified that they are verifying their email before
+   * being logged in.
+   * @locus Client
+   */
+  onEmailVerificationLink(callback) {
+    throw new Error("implemented in url_client.js");
+  }
+
+  /**
+   * @summary Register a function to call when an account enrollment link is
+   * clicked in an email sent by
+   * [`Accounts.sendEnrollmentEmail`](#accounts_sendenrollmentemail).
+   * This function should be called in top-level code, not inside
+   * `Meteor.startup()`.
+   * @param  {Function} callback The function to call. It is given two arguments:
+   *
+   * 1. `token`: A password reset token that can be passed to
+   * [`Accounts.resetPassword`](#accounts_resetpassword) to give the newly
+   * enrolled account a password.
+   * 2. `done`: A function to call when the enrollment UI flow is complete.
+   * The normal login process is suspended until this function is called, so that
+   * user A can be enrolled even if user B was logged in.
+   * @locus Client
+   */
+  onEnrollmentLink(callback) {
+    throw new Error("implemented in url_client.js");
+  }
+
+  /**
+   * @summary Log the user out.
+   * @locus Client
+   * @param {Function} [callback] Optional callback. Called with no arguments on success, or with a single `Error` argument on failure.
+   */
+  logout(callback) {
+    var self = this;
+    self.connection.apply('logout', [], {
+      wait: true
+    }, function (error, result) {
+      if (error) {
+        callback && callback(error);
+      } else {
+        self.makeClientLoggedOut();
+        callback && callback();
+      }
+    });
+  }
+
+  /**
+   * @summary Log out other clients logged in as the current user, but does not log out the client that calls this function.
+   * @locus Client
+   * @param {Function} [callback] Optional callback. Called with no arguments on success, or with a single `Error` argument on failure.
+   */
+  logoutOtherClients(callback) {
+    var self = this;
+
+    // We need to make two method calls: one to replace our current token,
+    // and another to remove all tokens except the current one. We want to
+    // call these two methods one after the other, without any other
+    // methods running between them. For example, we don't want `logout`
+    // to be called in between our two method calls (otherwise the second
+    // method call would return an error). Another example: we don't want
+    // logout to be called before the callback for `getNewToken`;
+    // otherwise we would momentarily log the user out and then write a
+    // new token to localStorage.
+    //
+    // To accomplish this, we make both calls as wait methods, and queue
+    // them one after the other, without spinning off the event loop in
+    // between. Even though we queue `removeOtherTokens` before
+    // `getNewToken`, we won't actually send the `removeOtherTokens` call
+    // until the `getNewToken` callback has finished running, because they
+    // are both wait methods.
+    self.connection.apply(
+      'getNewToken',
+      [],
+      { wait: true },
+      function (err, result) {
+        if (! err) {
+          self._storeLoginToken(
+            self.userId(),
+            result.token,
+            result.tokenExpires
+          );
+        }
+      }
+    );
+
+    self.connection.apply(
+      'removeOtherTokens',
+      [],
+      { wait: true },
+      function (err) {
+        callback && callback(err);
+      }
+    );
   }
 };
 
+var Ap = AccountsClient.prototype;
+
 /**
- * @summary True if a login method (such as `Meteor.loginWithPassword`, `Meteor.loginWithFacebook`, or `Accounts.createUser`) is currently in progress. A reactive data source.
+ * @summary Same as [`Accounts.loggingIn`](#accounts_loggingin).
  * @locus Client
  */
 Meteor.loggingIn = function () {
   return Accounts.loggingIn();
-};
-
-Ap.loggingIn = function () {
-  this._loggingInDeps.depend();
-  return this._loggingIn;
 };
 
 ///
@@ -249,7 +384,7 @@ Ap.makeClientLoggedIn = function (userId, token, tokenExpires) {
 };
 
 /**
- * @summary Log the user out.
+ * @summary Same as [`AccountsClient#logout`](#accounts-logout).
  * @locus Client
  * @param {Function} [callback] Optional callback. Called with no arguments on success, or with a single `Error` argument on failure.
  */
@@ -257,71 +392,13 @@ Meteor.logout = function (callback) {
   return Accounts.logout(callback);
 };
 
-Ap.logout = function (callback) {
-  var self = this;
-  self.connection.apply('logout', [], {
-    wait: true
-  }, function (error, result) {
-    if (error) {
-      callback && callback(error);
-    } else {
-      self.makeClientLoggedOut();
-      callback && callback();
-    }
-  });
-};
-
 /**
- * @summary Log out other clients logged in as the current user, but does not log out the client that calls this function.
+ * @summary Same as [`AccountsClient#logoutOtherClients`](#accounts_logoutotherclients).
  * @locus Client
  * @param {Function} [callback] Optional callback. Called with no arguments on success, or with a single `Error` argument on failure.
  */
 Meteor.logoutOtherClients = function (callback) {
   return Accounts.logoutOtherClients(callback);
-};
-
-Ap.logoutOtherClients = function (callback) {
-  var self = this;
-
-  // We need to make two method calls: one to replace our current token,
-  // and another to remove all tokens except the current one. We want to
-  // call these two methods one after the other, without any other
-  // methods running between them. For example, we don't want `logout`
-  // to be called in between our two method calls (otherwise the second
-  // method call would return an error). Another example: we don't want
-  // logout to be called before the callback for `getNewToken`;
-  // otherwise we would momentarily log the user out and then write a
-  // new token to localStorage.
-  //
-  // To accomplish this, we make both calls as wait methods, and queue
-  // them one after the other, without spinning off the event loop in
-  // between. Even though we queue `removeOtherTokens` before
-  // `getNewToken`, we won't actually send the `removeOtherTokens` call
-  // until the `getNewToken` callback has finished running, because they
-  // are both wait methods.
-  self.connection.apply(
-    'getNewToken',
-    [],
-    { wait: true },
-    function (err, result) {
-      if (! err) {
-        self._storeLoginToken(
-          self.userId(),
-          result.token,
-          result.tokenExpires
-        );
-      }
-    }
-  );
-
-  self.connection.apply(
-    'removeOtherTokens',
-    [],
-    { wait: true },
-    function (err) {
-      callback && callback(err);
-    }
-  );
 };
 
 

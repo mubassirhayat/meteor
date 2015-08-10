@@ -131,11 +131,14 @@ var toc = [
       "Accounts.validateNewUser",
       "Accounts.onCreateUser",
       "Accounts.validateLoginAttempt",
+      { name: "AccountsClient#loggingIn", id: "accounts_loggingin" },
+      { name: "AccountsClient#logout", id: "accounts_logout" },
+      { name: "AccountsClient#logoutOtherClients", id: "accounts_logoutotherclients" },
       { name: "AccountsCommon#userId", id: "accounts_userid" },
       { name: "AccountsCommon#user", id: "accounts_user" },
       { name: "AccountsCommon#config", id: "accounts_config" },
       { name: "AccountsCommon#onLogin", id: "accounts_onlogin" },
-      { name: "AccountsCommon#onLoginFailure", id: "accounts_onloginfailure" }
+      { name: "AccountsCommon#onLoginFailure", id: "accounts_onloginfailure" },
     ],
 
     {name: "Passwords", id: "accounts_passwords"}, [
@@ -152,9 +155,9 @@ var toc = [
       "Accounts.sendVerificationEmail",
       {type: "spacer"},
 
-      {name: "Accounts.onResetPasswordLink", id: "Accounts-onResetPasswordLink"},
-      {name: "Accounts.onEnrollmentLink", id: "Accounts-onEnrollmentLink"},
-      {name: "Accounts.onEmailVerificationLink", id: "Accounts-onEmailVerificationLink"},
+      {name: "AccountsClient#onResetPasswordLink", id: "Accounts-onResetPasswordLink"},
+      {name: "AccountsClient#onEnrollmentLink", id: "Accounts-onEnrollmentLink"},
+      {name: "AccountsClient#onEmailVerificationLink", id: "Accounts-onEmailVerificationLink"},
       {type: "spacer"},
 
       "Accounts.emailTemplates"

@@ -2,6 +2,8 @@
 
 <h2 id="accounts_api"><span>Accounts</span></h2>
 
+{{> autoApiBox "AccountsClient" }}
+
 The Meteor Accounts system builds on top of the `userId` support in
 [`publish`](#publish_userId) and [`methods`](#method_userId). The core
 packages add the concept of user documents stored in the database, and
@@ -122,12 +124,18 @@ their user document:
     Meteor.users.deny({update: function () { return true; }});
 
 
+{{> autoApiBox "AccountsClient#loggingIn"}}
+
 {{> autoApiBox "Meteor.loggingIn"}}
 
 For example, [the `accounts-ui` package](#accountsui) uses this to display an
 animation while the login request is being processed.
 
+{{> autoApiBox "AccountsClient#logout"}}
+
 {{> autoApiBox "Meteor.logout"}}
+
+{{> autoApiBox "AccountsClient#logoutOtherClients"}}
 
 {{> autoApiBox "Meteor.logoutOtherClients"}}
 
