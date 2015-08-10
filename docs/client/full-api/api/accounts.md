@@ -16,6 +16,7 @@ login provider packages: `accounts-password`, `accounts-facebook`,
 `accounts-github`, `accounts-google`, `accounts-meetup`,
 `accounts-twitter`, or `accounts-weibo`.
 
+{{> autoApiBox "AccountsCommon#user" }}
 
 {{> autoApiBox "Meteor.user"}}
 
@@ -27,6 +28,8 @@ are published from the server (other fields won't be available on the
 client). By default the server publishes `username`, `emails`, and
 `profile` (writable by user). See [`Meteor.users`](#meteor_users) for more on
 the fields used in user documents.
+
+{{> autoApiBox "AccountsCommon#userId" }}
 
 {{> autoApiBox "Meteor.userId"}}
 
@@ -239,7 +242,8 @@ the externally-accessible URL, not the URL inside your proxy).
 
 {{> autoApiBox "loggingIn"}}
 
-{{> autoApiBox "Accounts.config"}}
+{{> autoApiBox "AccountsCommon#config"}}
+
 {{> autoApiBox "Accounts.ui.config"}}
 
 Example:
@@ -387,12 +391,12 @@ to fail, and should start with
       return false;
 
 
-{{> autoApiBox "Accounts.onLogin"}}
+{{> autoApiBox "AccountsCommon#onLogin"}}
 
-See description of [Accounts.onLoginFailure](#accounts_onloginfailure)
+See description of [AccountsCommon#onLoginFailure](#accounts_onloginfailure)
 for details.
 
-{{> autoApiBox "Accounts.onLoginFailure"}}
+{{> autoApiBox "AccountsCommon#onLoginFailure"}}
 
 Either the `onLogin` or the `onLoginFailure` callbacks will be called
 for each login attempt. The `onLogin` callbacks are called after the

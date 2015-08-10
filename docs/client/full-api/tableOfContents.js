@@ -127,13 +127,15 @@ var toc = [
       {name: "{{loggingIn}}", id: "template_loggingin"},
       {type: "spacer"},
 
-      "Accounts.config",
       "Accounts.ui.config",
       "Accounts.validateNewUser",
       "Accounts.onCreateUser",
       "Accounts.validateLoginAttempt",
-      "Accounts.onLogin",
-      "Accounts.onLoginFailure"
+      { name: "AccountsCommon#userId", id: "accounts_userid" },
+      { name: "AccountsCommon#user", id: "accounts_user" },
+      { name: "AccountsCommon#config", id: "accounts_config" },
+      { name: "AccountsCommon#onLogin", id: "accounts_onlogin" },
+      { name: "AccountsCommon#onLoginFailure", id: "accounts_onloginfailure" }
     ],
 
     {name: "Passwords", id: "accounts_passwords"}, [

@@ -1,6 +1,5 @@
 // get the docs id from the name
 nameToId = {
-  "Accounts.onLogin": "accounts_onlogin",
   "Meteor.isClient": "meteor_isclient",
   "Meteor.isServer": "meteor_isserver",
   "Meteor.startup": "meteor_startup",
@@ -45,7 +44,11 @@ nameToId = {
   "Accounts.forgotPassword": "accounts_forgotpassword",
   "Accounts.createUser": "accounts_createuser",
   "Accounts.validateLoginAttempt": "accounts_validateloginattempt",
-  "Accounts.onLoginFailure": "accounts_onloginfailure",
+  "AccountsCommon#userId": "accounts_userid",
+  "AccountsCommon#user": "accounts_user",
+  "AccountsCommon#config": "accounts_config",
+  "AccountsCommon#onLogin": "accounts_onlogin",
+  "AccountsCommon#onLoginFailure": "accounts_onloginfailure",
   "Accounts.setPassword": "accounts_setpassword",
   "Accounts.sendEnrollmentEmail": "accounts_sendenrollmentemail",
   "Accounts.onCreateUser": "accounts_oncreateuser",
@@ -84,7 +87,6 @@ nameToId = {
   "Meteor.logout": "meteor_logout",
   "Meteor.logoutOtherClients": "meteor_logoutotherclients",
   "Meteor.loginWithPassword": "meteor_loginwithpassword",
-  "Accounts.config": "accounts_config",
   "Accounts.validateNewUser": "accounts_validatenewuser",
   "Accounts.changePassword": "accounts_changepassword",
   "Meteor.setTimeout": "meteor_settimeout",
