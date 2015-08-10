@@ -4,6 +4,8 @@
 
 {{> autoApiBox "AccountsClient" }}
 
+{{> autoApiBox "AccountsServer" }}
+
 The Meteor Accounts system builds on top of the `userId` support in
 [`publish`](#publish_userId) and [`methods`](#method_userId). The core
 packages add the concept of user documents stored in the database, and
@@ -267,7 +269,7 @@ Example:
       passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
     });
 
-{{> autoApiBox "Accounts.validateNewUser"}}
+{{> autoApiBox "AccountsServer#validateNewUser"}}
 
 This can be called multiple times. If any of the functions return `false` or
 throw an error, the new user creation is aborted. To set a specific error
@@ -295,7 +297,7 @@ the [`Accounts.validateLoginAttempt`](#accounts_validateloginattempt)
 callbacks. If these callbacks succeed but those fail, the user will still be
 created but the connection will not be logged in as that user.
 
-{{> autoApiBox "Accounts.onCreateUser"}}
+{{> autoApiBox "AccountsServer#onCreateUser"}}
 
 Use this when you need to do more than simply accept or reject new user
 creation. With this function you can programatically control the
@@ -333,7 +335,7 @@ Example:
     });
 
 
-{{> autoApiBox "Accounts.validateLoginAttempt"}}
+{{> autoApiBox "AccountsServer#validateLoginAttempt"}}
 
 Call `validateLoginAttempt` with a callback to be called on login
 attempts.  It returns an object with a single method, `stop`.  Calling

@@ -958,13 +958,110 @@ DocsData = {
     "scope": "instance",
     "summary": "Get the current user id, or `null` if no user is logged in. A reactive data source."
   },
-  "Ap.onCreateUser": {
+  "AccountsServer": {
+    "augments": [
+      "AccountsCommon"
+    ],
+    "filepath": "accounts-base/accounts_server.js",
+    "instancename": "Accounts",
+    "kind": "class",
+    "lineno": 11,
+    "locus": "Server",
+    "longname": "AccountsServer",
+    "name": "AccountsServer",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>A server object such as <code>Meteor.server</code>.</p>",
+        "name": "server",
+        "type": {
+          "names": [
+            "Object"
+          ]
+        }
+      }
+    ],
+    "scope": "global",
+    "summary": "Constructor for the `Accounts` namespace on the server."
+  },
+  "AccountsServer#config": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#config",
+    "kind": "function",
+    "lineno": 92,
+    "locus": "Anywhere",
+    "longname": "AccountsServer#config",
+    "memberof": "AccountsServer",
+    "name": "config",
+    "options": [
+      {
+        "description": "<p>New users with an email address will receive an address verification email.</p>",
+        "name": "sendVerificationEmail",
+        "type": {
+          "names": [
+            "Boolean"
+          ]
+        }
+      },
+      {
+        "description": "<p>Calls to <a href=\"#accounts_createuser\"><code>createUser</code></a> from the client will be rejected. In addition, if you are using <a href=\"#accountsui\">accounts-ui</a>, the &quot;Create account&quot; link will not be available.</p>",
+        "name": "forbidClientAccountCreation",
+        "type": {
+          "names": [
+            "Boolean"
+          ]
+        }
+      },
+      {
+        "description": "<p>If set to a string, only allows new users if the domain part of their email address matches the string. If set to a function, only allows new users if the function returns true.  The function is passed the full email address of the proposed new user.  Works with password-based sign-in and external services that expose email addresses (Google, Facebook, GitHub). All existing users still can log in after enabling this option. Example: <code>Accounts.config({ restrictCreationByEmailDomain: 'school.edu' })</code>.</p>",
+        "name": "restrictCreationByEmailDomain",
+        "type": {
+          "names": [
+            "String",
+            "function"
+          ]
+        }
+      },
+      {
+        "description": "<p>The number of days from when a user logs in until their token expires and they are logged out. Defaults to 90. Set to <code>null</code> to disable login expiration.</p>",
+        "name": "loginExpirationInDays",
+        "type": {
+          "names": [
+            "Number"
+          ]
+        }
+      },
+      {
+        "description": "<p>When using the <code>oauth-encryption</code> package, the 16 byte key using to encrypt sensitive account credentials in the database, encoded in base64.  This option may only be specifed on the server.  See packages/oauth-encryption/README.md for details.</p>",
+        "name": "oauthSecretKey",
+        "type": {
+          "names": [
+            "String"
+          ]
+        }
+      }
+    ],
+    "params": [
+      {
+        "name": "options",
+        "type": {
+          "names": [
+            "Object"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Set global accounts options."
+  },
+  "AccountsServer#onCreateUser": {
     "filepath": "accounts-base/accounts_server.js",
     "kind": "function",
-    "lineno": 1174,
+    "lineno": 116,
     "locus": "Server",
-    "longname": "Ap.onCreateUser",
-    "memberof": "Ap",
+    "longname": "AccountsServer#onCreateUser",
+    "memberof": "AccountsServer",
     "name": "onCreateUser",
     "options": [],
     "params": [
@@ -978,16 +1075,97 @@ DocsData = {
         }
       }
     ],
-    "scope": "static",
+    "scope": "instance",
     "summary": "Customize new user creation."
   },
-  "Ap.validateLoginAttempt": {
+  "AccountsServer#onLogin": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#onLogin",
+    "kind": "function",
+    "lineno": 146,
+    "locus": "Anywhere",
+    "longname": "AccountsServer#onLogin",
+    "memberof": "AccountsServer",
+    "name": "onLogin",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The callback to be called when login is successful.</p>",
+        "name": "func",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a callback to be called after a login attempt succeeds."
+  },
+  "AccountsServer#onLoginFailure": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#onLoginFailure",
+    "kind": "function",
+    "lineno": 155,
+    "locus": "Anywhere",
+    "longname": "AccountsServer#onLoginFailure",
+    "memberof": "AccountsServer",
+    "name": "onLoginFailure",
+    "options": [],
+    "params": [
+      {
+        "description": "<p>The callback to be called after the login has failed.</p>",
+        "name": "func",
+        "type": {
+          "names": [
+            "function"
+          ]
+        }
+      }
+    ],
+    "scope": "instance",
+    "summary": "Register a callback to be called after a login attempt fails."
+  },
+  "AccountsServer#user": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#user",
+    "kind": "function",
+    "lineno": 52,
+    "locus": "Anywhere but publish functions",
+    "longname": "AccountsServer#user",
+    "memberof": "AccountsServer",
+    "name": "user",
+    "options": [],
+    "params": [],
+    "scope": "instance",
+    "summary": "Get the current user record, or `null` if no user is logged in. A reactive data source."
+  },
+  "AccountsServer#userId": {
+    "filepath": "accounts-base/accounts_common.js",
+    "inherited": true,
+    "inherits": "AccountsCommon#userId",
+    "kind": "function",
+    "lineno": 44,
+    "locus": "Anywhere but publish functions",
+    "longname": "AccountsServer#userId",
+    "memberof": "AccountsServer",
+    "name": "userId",
+    "options": [],
+    "overrides": "AccountsCommon#userId",
+    "params": [],
+    "scope": "instance",
+    "summary": "Get the current user id, or `null` if no user is logged in. A reactive data source."
+  },
+  "AccountsServer#validateLoginAttempt": {
     "filepath": "accounts-base/accounts_server.js",
     "kind": "function",
-    "lineno": 91,
+    "lineno": 93,
     "locus": "Server",
-    "longname": "Ap.validateLoginAttempt",
-    "memberof": "Ap",
+    "longname": "AccountsServer#validateLoginAttempt",
+    "memberof": "AccountsServer",
     "name": "validateLoginAttempt",
     "options": [],
     "params": [
@@ -1001,16 +1179,16 @@ DocsData = {
         }
       }
     ],
-    "scope": "static",
+    "scope": "instance",
     "summary": "Validate login attempts."
   },
-  "Ap.validateNewUser": {
+  "AccountsServer#validateNewUser": {
     "filepath": "accounts-base/accounts_server.js",
     "kind": "function",
-    "lineno": 1257,
+    "lineno": 103,
     "locus": "Server",
-    "longname": "Ap.validateNewUser",
-    "memberof": "Ap",
+    "longname": "AccountsServer#validateNewUser",
+    "memberof": "AccountsServer",
     "name": "validateNewUser",
     "options": [],
     "params": [
@@ -1024,7 +1202,7 @@ DocsData = {
         }
       }
     ],
-    "scope": "static",
+    "scope": "instance",
     "summary": "Set restrictions on new user creation."
   },
   "App": {
