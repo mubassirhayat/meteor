@@ -162,6 +162,8 @@ Meteor.methods({
     const invocation1 = DDP._CurrentInvocation.get();
     return new Promise.resolve(arg).then(result => {
       const invocation2 = DDP._CurrentInvocation.get();
+      // This equality holds because Promise callbacks are bound to the
+      // dynamic environment where .then was called.
       if (invocation1 !== invocation2) {
         throw new Meteor.Error("invocation mismatch");
       }
@@ -184,20 +186,25 @@ Tinytest.addAsync(
       "clientConn.call after waiting"
     );
 
-    const clientCallPromise = new Promise((resolve, reject) => {
-      clientConn.call(
+    const clientCallPromise = new Promise(
+      (resolve, reject) => clientConn.call(
         "testResolvedPromise",
         "clientConn.call with callback",
         (error, result) => error ? reject(error) : resolve(result)
-      );
-    });
+      )
+    );
 
     const serverCallAsyncPromise = Meteor.server.callAsync(
       "testResolvedPromise",
       "Meteor.server.callAsync"
     );
 
-    const clientCallWithCallbackPromise = new Promise(resolve => {
+    const serverApplyAsyncPromise = Meteor.server.applyAsync(
+      "testResolvedPromise",
+      ["Meteor.server.applyAsync"]
+    );
+
+    const clientCallRejectedPromise = new Promise(resolve => {
       clientConn.call(
         "testRejectedPromise",
         "with callback",
@@ -207,12 +214,14 @@ Tinytest.addAsync(
 
     Promise.all([
       clientCallPromise,
+      clientCallRejectedPromise,
       serverCallAsyncPromise,
-      clientCallWithCallbackPromise
+      serverApplyAsyncPromise
     ]).then(results => test.equal(results, [
       "clientConn.call with callback after waiting",
+      "[with callback raised Meteor.Error]",
       "Meteor.server.callAsync after waiting",
-      "[with callback raised Meteor.Error]"
+      "Meteor.server.applyAsync after waiting"
     ]), error => test.fail(error))
       .then(onComplete);
   })

@@ -732,7 +732,9 @@ _.extend(Session.prototype, {
       }, (exception) => {
         finish();
         payload.error = wrapInternalException(
-          exception, "while invoking method '" + msg.method + "'");
+          exception,
+          `while invoking method '${msg.method}'`
+        );
         self.send(payload);
       });
     }
@@ -1537,12 +1539,13 @@ _.extend(Server.prototype, {
   },
 
   call: function (name, ...args) {
-    // If it's a function, the last argument is the result callback,
-    // not a parameter to the remote method.
-    return (args.length &&
-            typeof args[args.length - 1] === "function")
-      ? this.apply(name, args, args.pop())
-      : this.apply(name, args);
+    if (args.length && typeof args[args.length - 1] === "function") {
+      // If it's a function, the last argument is the result callback, not
+      // a parameter to the remote method.
+      var callback = args.pop();
+    }
+
+    return this.apply(name, args, callback);
   },
 
   // A version of the call method that always returns a Promise.
