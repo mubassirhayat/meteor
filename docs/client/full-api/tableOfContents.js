@@ -113,6 +113,10 @@ var toc = [
     ],
 
     {name: "Accounts", id: "accounts_api"}, [
+      "AccountsClient",
+      "AccountsServer",
+      {type: "spacer"},
+
       "Meteor.user",
       "Meteor.userId",
       "Meteor.users",
@@ -128,15 +132,21 @@ var toc = [
       {type: "spacer"},
 
       "Accounts.ui.config",
+      {type: "spacer"},
+
       { name: "AccountsClient#loggingIn", id: "accounts_loggingin" },
       { name: "AccountsClient#logout", id: "accounts_logout" },
       { name: "AccountsClient#logoutOtherClients", id: "accounts_logoutotherclients" },
+      {type: "spacer"},
+
       { name: "AccountsServer#onCreateUser",
         id: "accounts_oncreateuser" },
       { name: "AccountsServer#validateLoginAttempt",
         id: "accounts_validateloginattempt" },
       { name: "AccountsServer#validateNewUser",
         id: "accounts_validatenewuser" },
+      {type: "spacer"},
+
       { name: "AccountsCommon#userId", id: "accounts_userid" },
       { name: "AccountsCommon#user", id: "accounts_user" },
       { name: "AccountsCommon#config", id: "accounts_config" },

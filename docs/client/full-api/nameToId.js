@@ -40,6 +40,8 @@ nameToId = {
   "Session.set": "session_set",
   "Subscription#userId": "publish_userId",
   "DDPCommon.MethodInvocation#userId": "method_userId",
+  "AccountsClient": "accountsclient",
+  "AccountsServer": "accountsserver",
   "Accounts.verifyEmail": "accounts_verifyemail",
   "Accounts.forgotPassword": "accounts_forgotpassword",
   "Accounts.createUser": "accounts_createuser",

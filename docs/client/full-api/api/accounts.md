@@ -2,10 +2,6 @@
 
 <h2 id="accounts_api"><span>Accounts</span></h2>
 
-{{> autoApiBox "AccountsClient" }}
-
-{{> autoApiBox "AccountsServer" }}
-
 The Meteor Accounts system builds on top of the `userId` support in
 [`publish`](#publish_userId) and [`methods`](#method_userId). The core
 packages add the concept of user documents stored in the database, and
@@ -19,6 +15,34 @@ applications typically include this automatically by adding one of the
 login provider packages: `accounts-password`, `accounts-facebook`,
 `accounts-github`, `accounts-google`, `accounts-meetup`,
 `accounts-twitter`, or `accounts-weibo`.
+
+The `accounts-base` package exports two constructors, called
+`AccountsClient` and `AccountsServer`, which are used to create the
+`Accounts` object that is available on the client and the server,
+respectively.
+
+This predefined `Accounts` object (along with similar convenience methods
+of `Meteor`, such as [`Meteor.logout`](#meteor_logout)) is sufficient to
+implement most accounts-related logic in Meteor apps. Nevertheless, these
+two constructors can be instantiated more than once, to create multiple
+independent connections between different accounts servers and their
+clients, in more complicated authentication situations.
+
+{{> autoApiBox "AccountsClient" }}
+
+At most one of `options.connection` and `options.ddpUrl` should be
+provided in any instantiation of `AccountsClient`. If neither is provided,
+`Meteor.connection` will be used as the `.connection` property of the
+`AccountsClient` instance.
+
+Note that `AccountsClient` is currently available only on the client, due
+to its use of browser APIs such as `window.localStorage`. In principle,
+though, it might make sense to establish a client connection from one
+server to another remote accounts server. Please [let us
+know](https://github.com/meteor/meteor/wiki/Contributing-to-Meteor#feature-requests)
+if you find yourself needing this server-to-server functionality.
+
+{{> autoApiBox "AccountsServer" }}
 
 {{> autoApiBox "AccountsCommon#user" }}
 
