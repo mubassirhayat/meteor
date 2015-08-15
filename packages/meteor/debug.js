@@ -39,11 +39,6 @@ Meteor._debug = function (/* arguments */) {
 
         if (allArgumentsOfTypeString)
           console.log.apply(console, [Array.prototype.join.call(arguments, " ")]);
-        // We want to print out the stack trace when dynamics_nodejs.js throws
-        // an exception. Need to know what case this is and then make it into
-        // array so that we can pass it to console.log.apply.
-        else if (arguments.length === 2)
-          console.log.apply(console, [arguments[1]]);
         else
           console.log.apply(console, arguments);
 
